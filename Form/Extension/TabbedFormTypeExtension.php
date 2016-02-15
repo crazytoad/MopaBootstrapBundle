@@ -1,11 +1,12 @@
 <?php
 namespace Mopa\Bundle\BootstrapBundle\Form\Extension;
 
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\Form\AbstractTypeExtension;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Mopa\Bundle\BootstrapBundle\Form\Type\TabsType;
 
 class TabbedFormTypeExtension extends AbstractTypeExtension
@@ -17,24 +18,6 @@ class TabbedFormTypeExtension extends AbstractTypeExtension
     {
         $this->formFactory = $formFactory;
         $this->options = $options;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getExtendedType()
-    {
-        return 'form';
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
-    {
-        $resolver->setDefaults(array(
-            'tabs_class' => $this->options['class'],
-        ));
     }
 
     public function buildView(FormView $view, FormInterface $form, array $options)
@@ -75,5 +58,36 @@ class TabbedFormTypeExtension extends AbstractTypeExtension
         $view->vars['tabs'] = $tabs;
         $view->vars['tabbed'] = true;
         $view->vars['tabsView'] = $tabsForm->createView();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver->setDefaults(array(
+            'tabs_class' => $this->options['class'],
+        ));
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @deprecated Remove it when bumping requirements to SF 2.7+
+     */
+    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    {
+        $this->configureOptions($resolver);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getExtendedType()
+    {
+        return method_exists('Symfony\Component\Form\AbstractType', 'getBlockPrefix')
+            ? TabsType::class
+            : 'tabs' // SF <2.8 BC
+        ;
     }
 }
