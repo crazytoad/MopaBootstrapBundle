@@ -2,7 +2,7 @@ services:
     mopa.form.icon_button_extension:
            class: Mopa\Bundle\BootstrapBundle\Form\Extension\IconButtonExtension
            tags:
-               - { name: form.type_extension, alias: button, extended_type: Symfony\Component\Form\Extension\Core\Type\FormType }
+               - { name: form.type_extension, alias: button, extended_type: Symfony\Component\Form\Extension\Core\Type\ButtonType }
 
     mopa.form.help_extension:
            class: Mopa\Bundle\BootstrapBundle\Form\Extension\HelpFormTypeExtension
@@ -50,7 +50,7 @@ services:
                 - "@form.factory"
                 - { class: %mopa_bootstrap.form.tabs.class% }
            tags:
-                - { name: form.type_extension, alias: form, extended_type: Symfony\Component\Form\Extension\Core\Type\FormType }
+                - { name: form.type_extension, alias: form, extended_type: Mopa\Bundle\BootstrapBundle\Form\Type\TabsType }
 
     mopa.form.tab_type:
            class: Mopa\Bundle\BootstrapBundle\Form\Type\TabType
