@@ -70,7 +70,11 @@
     {% for child in form %}
         <label{% for attrname, attrvalue in label_attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}>
             {{ form_widget(child, {'attr': {'class': attr.widget_class|default('')}}) }}
-            {{ child.vars.label|trans({}, translation_domain) }}
+            {% if widget_checkbox_label == 'widget' %}
+                {{ child.vars.label|trans({}, translation_domain)|raw }}
+            {% else %}
+                {{ child.vars.label|trans({}, translation_domain) }}
+            {% endif %}
         </label>
     {% endfor %}
     </div>
