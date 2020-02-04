@@ -12,7 +12,7 @@
     {% if label is empty %}
         {% set label = name|humanize %}
     {% endif %}
-    <button type="{{ type|default('button') }}" {{ block('button_attributes') }}>
+    <button type="{{ type|default('button') }}" {{ (block('button_attributes') is defined ? block('button_attributes') : '') }}>
     {% if icon is not empty %} <i class="icon-{{ icon }}{% if icon_color is not empty %} icon-{{ icon_color }}{% endif %}"></i> {% endif %} {{ label|trans({}, translation_domain) }}</button>
 {% endspaceless %}
 {% endblock button_widget %}
@@ -25,16 +25,16 @@
     {% if type != 'hidden' and widget_addon.type|default(null) is not null %}
     <div class="input-{{- widget_addon.type -}}{% if colorpicker|default(false) %} colorpicker-component colorpicker-element {{ name }}" id="colorpicker-{{ name -}}{% endif %}">
         {% if widget_addon.type == 'prepend' %}
-            {{ block('widget_addon') }}
+            {{ (block('widget_addon') is defined ? block('widget_addon') : '') }}
         {% endif %}
     {% endif %}
     {% if not widget_remove_btn|default(null) %}
         {% set attr = attr|merge({'class': attr.class|default('') ~ ' not-removable'}) %}
     {% endif %}
-    <input type="{{ type }}" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %}/>
+    <input type="{{ type }}" {{ (block('widget_attributes') is defined ? block('widget_attributes') : '') }} {% if value is not empty %}value="{{ value }}" {% endif %}/>
     {% if type != 'hidden' and  widget_addon.type|default(null) is not null %}
         {% if widget_addon.type == 'append' %}
-            {{ block('widget_addon') }}
+            {{ (block('widget_addon') is defined ? block('widget_addon') : '') }}
         {% endif %}
     </div>
     {% endif %}
@@ -45,9 +45,9 @@
 {% spaceless %}
     {% if form.parent == null %}
         {% if render_fieldset %}<fieldset>{% endif %}
-        {% if show_legend %}{{ block('form_legend') }}{% endif %}
+        {% if show_legend %}{{ (block('form_legend') is defined ? block('form_legend') : '') }}{% endif %}
     {% endif %}
-    {{ block('form_rows_visible') }}
+    {{ (block('form_rows_visible') is defined ? block('form_rows_visible') : '') }}
     {{ form_rest(form) }}
     {% if form.parent == null %}
         {% if render_fieldset %}</fieldset>{% endif %}
@@ -57,7 +57,7 @@
 
 {% block collection_widget %}
 {% spaceless %}
-    {{ block('form_widget') }}
+    {{ (block('form_widget') is defined ? block('form_widget') : '') }}
 {% endspaceless %}
 {% endblock collection_widget %}
 
@@ -66,7 +66,7 @@
     {% set label_attr = label_attr|merge({'class': (label_attr.class|default('') ~ ' ' ~ (multiple ? 'checkbox' : 'radio'))}) %}
     {% set label_attr = label_attr|merge({'class': (label_attr.class ~ ' ' ~ (widget_type ? widget_type : ''))}) %}
     {% set label_attr = label_attr|merge({'class': (label_attr.class ~ ' ' ~ (inline is defined and inline ? 'inline' : ''))|trim}) %}
-    <div {{ block('widget_container_attributes') }}>
+    <div {{ (block('widget_container_attributes') is defined ? block('widget_container_attributes') : '') }}>
     {% for child in form %}
         <label{% for attrname, attrvalue in label_attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}>
             {{ form_widget(child, {'attr': {'class': attr.widget_class|default('')}}) }}
@@ -84,24 +84,24 @@
 {% block choice_widget_collapsed %}
     {% spaceless %}
         {% if widget_addon.type == 'prepend' %}
-            {{ block('widget_addon') }}
+            {{ (block('widget_addon') is defined ? block('widget_addon') : '') }}
         {% endif %}
-        <select {{ block('widget_attributes') }}{% if multiple %} multiple="multiple"{% endif %}>
+        <select {{ (block('widget_attributes') is defined ? block('widget_attributes') : '') }}{% if multiple %} multiple="multiple"{% endif %}>
             {% if empty_value is not none %}
                 <option value=""{% if required and value is empty %} selected="selected"{% endif %}>{{ empty_value|trans({}, translation_domain) }}</option>
             {% endif %}
             {% if preferred_choices|length > 0 %}
                 {% set options = preferred_choices %}
-                {{ block('choice_widget_options') }}
+                {{ (block('choice_widget_options') is defined ? block('choice_widget_options') : '') }}
                 {% if choices|length > 0 and separator is not none %}
                     <option disabled="disabled">{{ separator }}</option>
                 {% endif %}
             {% endif %}
             {% set options = choices %}
-            {{ block('choice_widget_options') }}
+            {{ (block('choice_widget_options') is defined ? block('choice_widget_options') : '') }}
         </select>
         {% if widget_addon.type == 'append' %}
-            {{ block('widget_addon') }}
+            {{ (block('widget_addon') is defined ? block('widget_addon') : '') }}
         {% endif %}
     {% endspaceless %}
 {% endblock choice_widget_collapsed %}
@@ -114,12 +114,12 @@
 {% if form.parent != null and 'choice' not in form.parent.vars.block_prefixes and label_render %}
     <label class="checkbox{% if inline is defined and inline %} inline{% endif %}">
 {% endif %}
-        <input type="checkbox" {{ block('widget_attributes') }}{% if value is defined %} value="{{ value }}"{% endif %}{% if checked %} checked="checked"{% endif %}/> {{ help_inline|trans({}, translation_domain)|raw }}
+        <input type="checkbox" {{ (block('widget_attributes') is defined ? block('widget_attributes') : '') }}{% if value is defined %} value="{{ value }}"{% endif %}{% if checked %} checked="checked"{% endif %}/> {{ help_inline|trans({}, translation_domain)|raw }}
 {% if form.parent != null and 'choice' not in form.parent.vars.block_prefixes %}
     {% if label_render and widget_checkbox_label in ['both', 'widget'] %}
         {{ label|trans({}, translation_domain) }}
         {% if widget_checkbox_label == 'widget' %}
-            {{ block('label_asterisk') }}
+            {{ (block('label_asterisk') is defined ? block('label_asterisk') : '') }}
         {% endif %}
     {% endif %}
     {% set help_inline = false %}
@@ -134,14 +134,14 @@
 {% spaceless %}
 {% if widget == 'single_text' %}
     {% if datepicker is defined %}
-        <div class="input-{{ widget_addon.type }} date" {{ block('widget_container_attributes') }} data-date="{{ value }}" data-date-format="{{ format|lower }}" data-form="datepicker">
+        <div class="input-{{ widget_addon.type }} date" {{ (block('widget_container_attributes') is defined ? block('widget_container_attributes') : '') }} data-date="{{ value }}" data-date-format="{{ format|lower }}" data-form="datepicker">
             {% if widget_addon.type == 'prepend' %}
-                {{ block('widget_addon') }}
+                {{ (block('widget_addon') is defined ? block('widget_addon') : '') }}
             {% endif %}
             {% set attr = attr|merge({'class': attr.class|default('') ~ ' not-removable grd-white'}) %}
-            <input type="text" {{ block('widget_attributes') }} value="{{ value }}"  data-form="datepicker" data-date-format="{{ format|lower }}"/>
+            <input type="text" {{ (block('widget_attributes') is defined ? block('widget_attributes') : '') }} value="{{ value }}"  data-form="datepicker" data-date-format="{{ format|lower }}"/>
             {% if widget_addon.type == 'append' %}
-                {{ block('widget_addon') }}
+                {{ (block('widget_addon') is defined ? block('widget_addon') : '') }}
             {% endif %}
             <script type="text/javascript">
                 $(document).ready(function () {
@@ -156,7 +156,7 @@
             </script>
         </div>
     {% else %}
-        {{ block('form_widget_simple') }}
+        {{ (block('form_widget_simple') is defined ? block('form_widget_simple') : '') }}
     {% endif %}
 {% else %}
         {% set attrYear = attr|merge({'class': attr.class|default('inline') ~ ' input-small'}) %}
@@ -168,7 +168,7 @@
                 '{{ month }}': form_widget(form.month, {'attr': attrMonth}),
                 '{{ day }}':   form_widget(form.day, {'attr': attrDay}),
             })|raw }}
-        {{ block('help') }}
+        {{ (block('help') is defined ? block('help') : '') }}
 {% endif %}
 {% endspaceless %}
 {% endblock date_widget %}
@@ -176,20 +176,20 @@
 {% block time_widget %}
 {% spaceless %}
     {% if widget == 'single_text' %}
-        {{ block('form_widget_simple') }}
+        {{ (block('form_widget_simple') is defined ? block('form_widget_simple') : '') }}
     {% else %}
         {% set attr = attr|merge({'class': attr.class|default('inline')}) %}
-        <div {{ block('widget_container_attributes')  }}>
+        <div {{ (block('widget_container_attributes') is defined ? block('widget_container_attributes') : '')  }}>
             {{ form_widget(form.hour, { 'attr': {  'size': '1', 'class': 'input-mini' } }) }}{% if with_minutes %}:{{ form_widget(form.minute, { 'attr': { 'size': '1', 'class': 'input-mini' } }) }}{% endif %}{% if with_seconds %}:{{ form_widget(form.second, { 'attr': { 'size': '1', 'class': 'input-mini' } }) }}{% endif %}
         </div>
-        {{ block('help') }}
+        {{ (block('help') is defined ? block('help') : '') }}
     {% endif %}
 {% endspaceless %}
 {% endblock time_widget %}
 
 {% block hexcolor_widget %}
     {% spaceless %}
-        {{ block('form_widget_simple') }}
+        {{ (block('form_widget_simple') is defined ? block('form_widget_simple') : '') }}
     {% endspaceless %}
         <script type="text/javascript">
         $(document).ready(function () {
@@ -201,10 +201,10 @@
 {% block datetime_widget %}
 {% spaceless %}
     {% if widget == 'single_text' %}
-        {{ block('form_widget_simple') }}
+        {{ (block('form_widget_simple') is defined ? block('form_widget_simple') : '') }}
     {% else %}
             {% set attr = attr|merge({'class': attr.class|default('')}) %}
-            <div {{ block('widget_container_attributes') }}>
+            <div {{ (block('widget_container_attributes') is defined ? block('widget_container_attributes') : '') }}>
                 {{ form_errors(form.date) }}
                 {{ form_errors(form.time) }}
                 {{ form_widget(form.date, {'attr': {'class': attr.widget_class|default('')}}) }}
@@ -217,14 +217,14 @@
 {% block percent_widget %}
 {% spaceless %}
     {% set widget_addon = widget_addon|merge({'text': widget_addon.text|default('%')}) %}
-    {{ block('form_widget_simple') }}
+    {{ (block('form_widget_simple') is defined ? block('form_widget_simple') : '') }}
 {% endspaceless %}
 {% endblock percent_widget %}
 
 {% block money_widget %}
 {% spaceless %}
     {% set widget_addon = widget_addon|merge({'text': money_pattern|replace({ '{{ widget }}': ''})}) %}
-    {{ block('form_widget_simple') }}
+    {{ (block('form_widget_simple') is defined ? block('form_widget_simple') : '') }}
 {% endspaceless %}
 {% endblock money_widget %}
 
@@ -237,7 +237,7 @@
     {% endif %}
     <legend>{{ label|trans({}, translation_domain) }}</legend>
     {% if widget_add_btn %}
-        {{ block('form_widget_add_btn') }}
+        {{ (block('form_widget_add_btn') is defined ? block('form_widget_add_btn') : '') }}
     {% endif %}
 {% endspaceless %}
 {% endblock form_legend %}
@@ -255,18 +255,18 @@
         {% set label_attr = label_attr|merge({'class': label_attr.class|default('') ~ ' control-label' ~ (required ? ' required' : ' optional') }) %}
         <label{% for attrname,attrvalue in label_attr %} {{attrname}}="{{attrvalue}}"{% endfor %}>
         {{ label|trans({}, translation_domain) }}
-        {{ block('label_asterisk') }}
+        {{ (block('label_asterisk') is defined ? block('label_asterisk') : '') }}
         {% if widget_add_btn %}
-            {{ block('form_widget_add_btn') }}
+            {{ (block('form_widget_add_btn') is defined ? block('form_widget_add_btn') : '') }}
         {% endif %}
         {% if help_label_tooltip_title %}
-            {{ block('help_label_tooltip') }}
+            {{ (block('help_label_tooltip') is defined ? block('help_label_tooltip') : '') }}
         {% endif %}
         {% if help_label_popover_title %}
-            {{ block('help_label_popover') }}
+            {{ (block('help_label_popover') is defined ? block('help_label_popover') : '') }}
         {% endif %}
         {% if help_label %}
-            {{ block('help_label') }}
+            {{ (block('help_label') is defined ? block('help_label') : '') }}
         {% endif %}
         </label>
     {% endif %}
@@ -312,13 +312,13 @@
 {% block form_row %}
 {% spaceless %}
     {% set attr = attr|merge({'class': attr.class|default('') ~ (errors|length > 0 ? ' error' : '') }) %}
-    {{ block('widget_control_group_start') }}
+    {{ (block('widget_control_group_start') is defined ? block('widget_control_group_start') : '') }}
     {{ widget_prefix|trans({}, translation_domain)|raw }} {{ form_widget(form, _context) }} {{ widget_suffix|trans({}, translation_domain)|raw }}
     {% if widget_remove_btn is defined %}
-        {{ block('form_widget_remove_btn') }}
+        {{ (block('form_widget_remove_btn') is defined ? block('form_widget_remove_btn') : '') }}
     {% endif -%}
-    {{ block('form_message') }}
-    {{ block('widget_control_group_end') }}
+    {{ (block('form_message') is defined ? block('form_message') : '') }}
+    {{ (block('widget_control_group_end') is defined ? block('widget_control_group_end') : '') }}
 {% endspaceless %}
 {% endblock form_row %}
 
@@ -327,7 +327,7 @@
 {% block form_message %}
 {% spaceless %}
     {{ form_errors(form) }}
-    {{ block('form_help') }}
+    {{ (block('form_help') is defined ? block('form_help') : '') }}
 {% endspaceless %}
 {% endblock form_message %}
 
@@ -347,7 +347,7 @@
     {% if widget_add_btn %}
     {% set button_type = 'add' %}
     {% set button_values = widget_add_btn %}
-    {{ block('collection_button') }}
+    {{ (block('collection_button') is defined ? block('collection_button') : '') }}
     {% endif %}
 {% endspaceless %}
 {% endblock form_widget_add_btn %}
@@ -357,7 +357,7 @@
     {% if widget_remove_btn %}
     {% set button_type = 'remove' %}
     {% set button_values = widget_remove_btn %}
-    {{ block('collection_button') }}
+    {{ (block('collection_button') is defined ? block('collection_button') : '') }}
     {% endif %}
 {% endspaceless %}
 {% endblock form_widget_remove_btn %}
@@ -425,7 +425,7 @@
     {% endfor %}
 {% else %}
     {% if errors|length > 0 %}
-    <span class="help-{{ block('error_type') }}">
+    <span class="help-{{ (block('error_type') is defined ? block('error_type') : '') }}">
         <span class="text-error">
             {% for error in errors %}
                 {{
@@ -478,7 +478,7 @@ inline
     {% if (form|length > 0 and form.parent != null)
         and 'field' not in form.vars.block_prefixes %}
         {% if show_child_legend%}
-            {{ block('form_legend') }}
+            {{ (block('form_legend') is defined ? block('form_legend') : '') }}
         {% elseif label_render %}
             {{ form_label(form, label|default(null)) }}
         {% endif %}
